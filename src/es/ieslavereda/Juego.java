@@ -16,6 +16,8 @@ public class Juego {
         //arrays
         char[][] tableroJugador = new char[10][10];
         char[][] tableroPC = new char[10][10];
+        char[][] disparosJugador = new char[10][10];
+        char[][] disparosPC = new char[10][10];
         int[] numeros = new int[10];
         int[] barcos = new int[4];
 
@@ -31,12 +33,15 @@ public class Juego {
 
         colocarBarcosJugador(tableroJugador, barcos, numeros, tableroPC);
         colocarBarcosPC(tableroJugador, barcos, numeros, tableroPC);
+
+        inicializarTablero(disparosJugador);
+        inicializarTablero(disparosPC);
     }
 
     // Métodos a implementar
 // Metodo que implementa el disparo del jugador
 
-    //public static boolean disparoJugador (char[][] tableroDisparosJugador, char[][] tableroPC){}
+    //public static boolean disparoJugador (char[][] disparosJugador, char[][] tableroPC){}
 
 
 // Metodo que implementa el disparo del PC
@@ -44,29 +49,7 @@ public class Juego {
     //public static boolean disparoPC(char[][] tableroDisparosPC, char[][] tableroJugador){}
 
 
-/* Este metodo inicializa cada tablero de la siguiente manera:
-
-A ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-B ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-C ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-D ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-E ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-F ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-G ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-H ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-I ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
- 0 1 2 3 4 5 6 7 8 9	*/
+// Este metodo inicializa cada tablero de la siguiente manera:
 
     public static void rellenarNums(int[] numeros){
         for(int i=0;i<numeros.length;i++){
@@ -80,8 +63,6 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
             for (int fila = 0; fila < 10; fila++)
                 tablero[fila][col] = '~';
     }
-
-
 
 //Este metodo visualiza el tablero por pantalla
 
@@ -98,12 +79,6 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
-
-
-// Este metodo suma todos los valores de un vector
-
-    //public static int sumaCeldas(int[] unVector){}
-
 
 //Este metodo coloca los barcos pasados como vector dentro del tablero del Jugador
 
@@ -229,7 +204,7 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
     public static boolean hayColision(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
 
         if (orientacion == 0) {
-            for (int i=0;i<=longitudBarco;i++){
+            for (int i=0;i<longitudBarco;i++){
                 if (tablero[filaInt][columnaInt+i]=='B'){
                     Pantalla.mostrarError("El barco colisiona con otro");
                     return true;
@@ -238,9 +213,30 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         }
 
         if (orientacion == 1) {
-            for (int i=0;i<=longitudBarco;i++){
+            for (int i=0;i<longitudBarco;i++){
                 if (tablero[filaInt+i][columnaInt]=='B'){
                     Pantalla.mostrarError("El barco colisiona con otro");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean hayColisionPC(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
+
+        if (orientacion == 0) {
+            for (int i=0;i<longitudBarco;i++){
+                if (tablero[filaInt][columnaInt+i]=='B'){
+                    return true;
+                }
+            }
+        }
+
+        if (orientacion == 1) {
+            for (int i=0;i<longitudBarco;i++){
+                if (tablero[filaInt+i][columnaInt]=='B'){
                     return true;
                 }
             }
@@ -254,14 +250,29 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
     public static boolean cabeBarco(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
         if (orientacion == 0) {
-            if ((tablero.length-1)-longitudBarco<=columnaInt){
+            if (columnaInt+longitudBarco-1 >= tablero[0].length){
                 Pantalla.mostrarError("El barco NO cabe");
                 return false;
             }
         }
         if (orientacion == 1) {
-            if ((tablero.length-1)-longitudBarco<=filaInt){
+            if (filaInt+longitudBarco-1 >= tablero.length){
                 Pantalla.mostrarError("El barco NO cabe");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean cabeBarcoPC(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
+        if (orientacion == 0) {
+            if (columnaInt+longitudBarco-1 >= tablero[0].length){
+                return false;
+            }
+        }
+        if (orientacion == 1) {
+            if (filaInt+longitudBarco-1 >= tablero.length){
                 return false;
             }
         }
@@ -282,7 +293,6 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         boolean doubleBarco3 = false;
 
         do {
-            System.out.println();
 
             int filaInt = (int)((Math.random() * 1000) / 100f);
             int columnaInt = (int)((Math.random() * 1000) / 100f);
@@ -294,10 +304,10 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
                 orientacion = 1;
 
             if (validado) {
-                cabe = cabeBarco(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
+                cabe = cabeBarcoPC(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
 
                 if (cabe)
-                    colision = hayColision(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
+                    colision = hayColisionPC(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
 
                 if (cabe && orientacion == 0 && !colision) {
 
