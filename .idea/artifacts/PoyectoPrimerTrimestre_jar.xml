@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PoyectoPrimerTrimestre:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PoyectoPrimerTrimestre_jar</output-path>
+    <root id="archive" name="PoyectoPrimerTrimestre.jar">
+      <element id="module-output" name="HundirLaFlota" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/diogonunes/JColor/5.5.1/JColor-5.5.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -74,5 +74,13 @@ public class Pantalla {
         System.out.println();
     }
 
+    public static void mostrarJunto(int[] numeros, char[][] tableroJugador, char[][] tableroPC, char[][] disparosJugador, char[][] disparosPC) {
+
+        Juego.borrarPantalla();
+        Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
+        System.out.println();
+        Pantalla.mostrarTablerosDisparos(numeros, disparosJugador, disparosPC);
+    }
+
 
 }

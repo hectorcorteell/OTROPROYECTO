@@ -1,6 +1,10 @@
 package es.ieslavereda;
 
+import com.diogonunes.jcolor.Attribute;
+
 import java.sql.SQLOutput;
+
+import static com.diogonunes.jcolor.Ansi.colorize;
 
 public class Juego {
     public static void main(String[] args) {
@@ -36,30 +40,118 @@ public class Juego {
         inicializarTablero(disparosJugador);
         inicializarTablero(disparosPC);
 
-        iniciarJuego(numeros, tableroJugador, tableroPC, disparosJugador, disparosPC);
+        iniciarJuego(numeros, tableroJugador, tableroPC, disparosJugador, disparosPC, nombre);
     }
 
-    public static void iniciarJuego(int[] numeros, char[][] tableroJugador, char[][] tableroPC, char[][] disparosJugador, char[][] disparosPC) {
+    public static void iniciarJuego(int[] numeros, char[][] tableroJugador, char[][] tableroPC,
+                                    char[][] disparosJugador, char[][] disparosPC, String nombre) {
 
-        borrarPantalla();
-        Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
-        System.out.println();
-        Pantalla.mostrarTablerosDisparos(numeros, disparosJugador, disparosPC);
-
+        int aciertosJugador=13;
+        int aciertosPC=13;
 
 
 
+        Pantalla.mostrarJunto(numeros, tableroJugador, tableroPC, disparosJugador, disparosPC);
+        System.out.println("Aciertos restantes para ganar [" + nombre + "]:" + aciertosJugador);
+        System.out.println("Aciertos restantes para ganar [PC]:" + aciertosPC);
+
+        do {
+            boolean aciertaJugador=disparoJugador(disparosJugador, tableroPC);
+            boolean aciertaPC=disparoPC(disparosPC, tableroJugador);
+            if (aciertaJugador){
+                aciertosJugador--;
+            }
+            if(aciertaPC){
+                aciertosPC--;
+            }
+
+            Pantalla.mostrarJunto(numeros, tableroJugador, tableroPC, disparosJugador, disparosPC);
+            System.out.println("Aciertos restantes para ganar [" + nombre + "]:" + aciertosJugador);
+            System.out.println("Aciertos restantes para ganar [PC]:" + aciertosPC);
+        }while(aciertosJugador>0 && aciertosPC>0);
+
+        if(aciertosJugador==0)
+            System.out.println(colorize("¡HAS GANADO "+nombre+"!", Attribute.TEXT_COLOR(0, 255, 0)));
+        else if (aciertosPC==0)
+            System.out.println("¡HAS PERDIDO"+nombre+"!");
     }
 
     // Métodos a implementar
 // Metodo que implementa el disparo del jugador
 
-    //public static boolean disparoJugador (char[][] disparosJugador, char[][] tableroPC){}
+    public static boolean disparoJugador (char[][] disparosJugador, char[][] tableroPC){
+        String coordenada;
+        boolean validado=false;
+        int filaInt;
+        int columnaInt;
+
+        do {
+
+            System.out.println();
+            coordenada = Entrada.obtenerTexto("Introduce una coordenada [A-J][0-9]");
+
+            if(coordenada.length() < 2){
+                Pantalla.mostrarError("La coordenada debe comprenderse de dos caracteres [LETRA][número]");
+
+            }else{
+                char fila=coordenada.charAt(0);
+                char columna=coordenada.charAt(1);
+                validado=Entrada.validarCoordenada('A','J',fila, columna, coordenada);
+
+                if (validado) {
+                    filaInt = convertirFilaInt(fila);
+                    columnaInt = convertirColumnaInt(columna);
+
+                    if (tableroPC[filaInt][columnaInt]=='B') {
+                        tableroPC[filaInt][columnaInt] = 'T';
+                        disparosJugador[filaInt][columnaInt] = 'T';
+                        return true;
+                    }else if (tableroPC[filaInt][columnaInt]=='T'){
+                        Pantalla.mostrarError("Ya has acertado esa posición");
+                        return false;
+                    }else {
+                        tableroPC[filaInt][columnaInt]='*';
+                        disparosJugador[filaInt][columnaInt]='*';
+                        return false;
+                    }
+
+                }
+
+            }
+
+
+        }while(validado);
+
+        return false;
+    }
 
 
 // Metodo que implementa el disparo del PC
 
-    //public static boolean disparoPC(char[][] tableroDisparosPC, char[][] tableroJugador){}
+    public static boolean disparoPC(char[][] tableroDisparosPC, char[][] tableroJugador){
+        String coordenada;
+        boolean validado=false;
+        int filaInt;
+        int columnaInt;
+
+
+        filaInt = (int)((Math.random() * 1000) / 100f);
+        columnaInt = (int)((Math.random() * 1000) / 100f);
+        int random = (int)((Math.random() * 1000) / 100f);
+
+        if (tableroJugador[filaInt][columnaInt]=='B') {
+            tableroJugador[filaInt][columnaInt] = 'T';
+            tableroDisparosPC[filaInt][columnaInt] = 'T';
+            return true;
+        }else if(tableroJugador[filaInt][columnaInt]=='T'){
+            return false;
+        }else{
+            tableroJugador[filaInt][columnaInt]='*';
+            tableroDisparosPC[filaInt][columnaInt]='*';
+            return false;
+        }
+
+    }
 
 
 // Este metodo inicializa cada tablero de la siguiente manera:
