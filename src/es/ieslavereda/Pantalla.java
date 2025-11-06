@@ -65,5 +65,14 @@ public class Pantalla {
         System.out.println();
     }
 
+    public static void mostrarTablerosDisparos(int[] numeros, char[][] tableroJugador, char[][] tableroPC){
+        System.out.println("      "+"Tus disparos"+" "+"                  "+"Disparos del PC");
+        Pantalla.mostrarNumerosTablero(numeros);
+        System.out.println();
+        Pantalla.mostrarTablero(tableroJugador,tableroPC);
+        Pantalla.mostrarNumerosTablero(numeros);
+        System.out.println();
+    }
+
 
 }

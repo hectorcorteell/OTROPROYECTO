@@ -19,7 +19,6 @@ public class Juego {
         char[][] disparosJugador = new char[10][10];
         char[][] disparosPC = new char[10][10];
         int[] numeros = new int[10];
-        int[] barcos = new int[4];
 
         //coordenadas
         int fila;
@@ -31,11 +30,25 @@ public class Juego {
 
         Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
 
-        colocarBarcosJugador(tableroJugador, barcos, numeros, tableroPC);
-        colocarBarcosPC(tableroJugador, barcos, numeros, tableroPC);
+        colocarBarcosJugador(tableroJugador, numeros, tableroPC);
+        colocarBarcosPC(tableroJugador, numeros, tableroPC);
 
         inicializarTablero(disparosJugador);
         inicializarTablero(disparosPC);
+
+        iniciarJuego(numeros, tableroJugador, tableroPC, disparosJugador, disparosPC);
+    }
+
+    public static void iniciarJuego(int[] numeros, char[][] tableroJugador, char[][] tableroPC, char[][] disparosJugador, char[][] disparosPC) {
+
+        borrarPantalla();
+        Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
+        System.out.println();
+        Pantalla.mostrarTablerosDisparos(numeros, disparosJugador, disparosPC);
+
+
+
+
     }
 
     // Métodos a implementar
@@ -82,7 +95,7 @@ public class Juego {
 
 //Este metodo coloca los barcos pasados como vector dentro del tablero del Jugador
 
-    public static void colocarBarcosJugador(char[][] tableroJugador, int[] barcos, int[] numeros, char[][] tableroPC){
+    public static void colocarBarcosJugador(char[][] tableroJugador, int[] numeros, char[][] tableroPC){
         String coordenada;
         int orientacion;
         boolean validado=false;
@@ -282,7 +295,7 @@ public class Juego {
 
 
     //Este metodo coloca los barcos pasados como vector dentro del tablero del PC
-    public static void colocarBarcosPC(char[][] tableroJugador, int[] barcos, int[] numeros, char[][] tableroPC) {
+    public static void colocarBarcosPC(char[][] tableroJugador, int[] numeros, char[][] tableroPC) {
         String coordenada;
         int orientacion;
         boolean validado = true;
